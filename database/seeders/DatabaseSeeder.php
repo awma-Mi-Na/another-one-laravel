@@ -13,6 +13,10 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // \App\Models\User::factory(10)->create();
+        \App\Models\User::factory()->create(['email' => 'awma@gmail.com']);
+        foreach (range(1, 10) as $num) {
+            $user = \App\Models\User::factory()->create();
+            \App\Models\Student::create(['user_id' => $user->id]);
+        }
     }
 }
