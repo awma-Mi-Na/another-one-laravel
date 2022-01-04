@@ -17,3 +17,12 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::post('/login', function () {
+    $attributes = request()->validate([
+        'email' => 'required|email',
+        'password' => 'required'
+    ]);
+    if (Auth::attempt($attributes))
+        return request()->user()->createToken('authToken')->plainTextToken;
+});
