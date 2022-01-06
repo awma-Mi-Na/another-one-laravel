@@ -14,8 +14,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::middleware('auth')->group(function () {
+    Route::get('user', function () {
+        return auth()->user();
+    });
 });
 
 Route::post('/login', function () {
@@ -23,6 +25,9 @@ Route::post('/login', function () {
         'email' => 'required|email',
         'password' => 'required'
     ]);
-    if (Auth::attempt($attributes))
-        return request()->user()->createToken('authToken')->plainTextToken;
+    if (!Auth::attempt($attributes))
+        // return request()->user()->createToken('authToken')->plainTextToken;
+        return response('log in failed');
+    Session::regenerate();
+    return redirect('/user');
 });
