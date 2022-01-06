@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\StudentController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -14,20 +15,23 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth')->group(function () {
+Route::middleware('auth:sanctum')->group(function () {
     Route::get('user', function () {
         return auth()->user();
     });
+    Route::middleware('role:admin')->prefix('admin')->apiResource('student', StudentController::class)->except(['show'])->parameters(['student' => 'roll_no']);
 });
 
-Route::post('/login', function () {
+// Route::resource('student', StudentController::class);
+
+Route::post('/login', function (Request $request) {
     $attributes = request()->validate([
         'email' => 'required|email',
         'password' => 'required'
     ]);
     if (!Auth::attempt($attributes))
-        // return request()->user()->createToken('authToken')->plainTextToken;
         return response('log in failed');
-    Session::regenerate();
-    return redirect('/user');
+    return request()->user()->createToken('authToken')->plainTextToken;
 });
+
+Route::resource('student', StudentController::class)->only('show')->scoped(['student' => 'roll_no']);

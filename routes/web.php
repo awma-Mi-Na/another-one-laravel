@@ -35,6 +35,6 @@ Route::get('login', function () {
 });
 
 Route::get('user', function () {
-    // return auth()->user();
-    dump(auth()->user());
+    return auth()->user();
+    // dump(auth()->user());
 });

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UpdateStudentRequest;
 use App\Models\Student;
 use Illuminate\Http\Request;
 
@@ -14,7 +15,7 @@ class StudentController extends Controller
      */
     public function index()
     {
-        //
+        return Student::all();
     }
 
     /**
@@ -35,7 +36,12 @@ class StudentController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $attributes = $request->validate([
+            'roll_no' => ['required', 'unique:students,roll_no'],
+            'name' => ['required'],
+            'dept' => ['required']
+        ]);
+        return Student::create($attributes);
     }
 
     /**
@@ -46,7 +52,7 @@ class StudentController extends Controller
      */
     public function show(Student $student)
     {
-        //
+        return $student;
     }
 
     /**
@@ -67,9 +73,10 @@ class StudentController extends Controller
      * @param  \App\Models\Student  $student
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Student $student)
+    public function update(UpdateStudentRequest $request, Student $student)
     {
-        //
+        $validatedData = $request->validated();
+        return $validatedData;
     }
 
     /**
